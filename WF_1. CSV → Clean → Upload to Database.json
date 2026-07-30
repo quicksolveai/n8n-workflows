@@ -1,0 +1,291 @@
+{
+  "name": "WF: 17 - CSV → Clean → Upload to Database",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "CSV → Clean → Upload to Database",
+        "formDescription": "CSV → Clean → Upload to Database",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload CSV File",
+              "fieldType": "file",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -496,
+        -32
+      ],
+      "id": "9949d559-7dd1-40a3-99ee-a901a6b0b576",
+      "name": "On form submission",
+      "webhookId": "81b7f441-5611-4cfc-9b08-a2984cb5edd4"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "Upload_CSV_File",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -240,
+        -32
+      ],
+      "id": "53b2cb19-a51a-41b5-b28e-e26813e0ea63",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "Email",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        -32
+      ],
+      "id": "30dc5e46-e911-4118-85c2-8dc555186530",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "47a96c03-69b7-478c-b295-799bbba631c3",
+              "name": "customer_id",
+              "value": "={{ $json.Customer_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "f222d833-38c9-4748-9379-d0588916086d",
+              "name": "full_name",
+              "value": "={{ $json.Full_Name }}",
+              "type": "string"
+            },
+            {
+              "id": "9693ce1f-4b82-456c-86a2-1d0aa4393a25",
+              "name": "email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "8fbc0ccc-4724-401d-9b6d-d57327db3e71",
+              "name": "phone",
+              "value": "={{ $json.Phone }}",
+              "type": "string"
+            },
+            {
+              "id": "fd7645f2-01a8-4955-bfb7-1ce6856c3059",
+              "name": "city",
+              "value": "={{ $json.City }}",
+              "type": "string"
+            },
+            {
+              "id": "046a30b1-6f48-4363-bfc3-3fcadcab60d2",
+              "name": "country",
+              "value": "={{ $json.Country }}",
+              "type": "string"
+            },
+            {
+              "id": "a0c477e0-47a0-4c29-97c3-62333619aeb4",
+              "name": "department",
+              "value": "={{ $json.Department }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        -32
+      ],
+      "id": "2891b830-e715-46e9-9401-d83c8e148d1a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1bF6yQ1Y7qydhRH09h550chcLWNttrVLybRFb2oKtOnM",
+          "mode": "list",
+          "cachedResultName": "CSV → Clean → Upload to Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bF6yQ1Y7qydhRH09h550chcLWNttrVLybRFb2oKtOnM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bF6yQ1Y7qydhRH09h550chcLWNttrVLybRFb2oKtOnM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "customer_id",
+              "displayName": "customer_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "department",
+              "displayName": "department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        -32
+      ],
+      "id": "70d68a8d-75fb-44e3-a70a-a391668fd7e7",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DtqShIrUqlnjKyBb",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9c4f512a-c7dc-4d52-a1bd-5af052ecfe6a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ceb3ffb1ce6351eb745546c7923af59c24e4013c76af82d858ab308f600b4483"
+  },
+  "nodeGroups": [],
+  "id": "k6Q6SIjBSCrDgZAK",
+  "tags": []
+}
