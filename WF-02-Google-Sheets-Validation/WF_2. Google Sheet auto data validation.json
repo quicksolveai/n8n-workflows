@@ -1,0 +1,1029 @@
+{
+  "name": "Google Sheet auto data validation",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4",
+          "mode": "list",
+          "cachedResultName": "Google Sheet Auto Data Validation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        -96
+      ],
+      "id": "8d4691a6-b94b-479d-ab80-f699ffba8677",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "VGw8UyhKWo69W4mg",
+          "name": "Google Sheets Trigger account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "9e4fd2a8-2c79-49e3-8479-560a735fdebf",
+              "leftValue": "={{ $json.Name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -112,
+        -96
+      ],
+      "id": "f9c95bff-4b05-4ea4-aaf5-f21fa20ad1be",
+      "name": "If-NAME VALIDATION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "83ce41ff-f9f8-4551-b986-5a92dbfdb49b",
+              "name": "Validation_Status",
+              "value": "Invalid",
+              "type": "string"
+            },
+            {
+              "id": "fed11041-dc1f-47c5-857e-86cf44f17c8c",
+              "name": "Error",
+              "value": "Name is Empty",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -336,
+        720
+      ],
+      "id": "608a70c8-d247-4253-a95a-f517039e2ebd",
+      "name": "Edit Fields-Name validation"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f720ffb7-e620-4b57-a9be-318420508815",
+              "name": "Validation_Status",
+              "value": "Invalid",
+              "type": "string"
+            },
+            {
+              "id": "d1bc74e2-63d6-4dd7-84f8-100c1ac41110",
+              "name": "Error",
+              "value": "Email is Empty",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        560
+      ],
+      "id": "ef9d14c4-ba46-4a5a-8aeb-24e3f291f7de",
+      "name": "Edit Fields-Email Empty Validation"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "121a39c9-fd3c-4f63-8dee-e8eb4efd77ef",
+              "name": "Validation_Status",
+              "value": "Invalid",
+              "type": "string"
+            },
+            {
+              "id": "d96533af-4ccd-4166-b134-6805110df1f2",
+              "name": "Error",
+              "value": "Invalid Email Format",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        432
+      ],
+      "id": "8906043f-dc5e-4ae9-aaf8-428f88466b59",
+      "name": "Edit Fields-Email Format validation"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cab43583-21ec-4ef6-8bfa-765a527f7559",
+              "name": "Validation_Status",
+              "value": "Invalid",
+              "type": "string"
+            },
+            {
+              "id": "67d1a66c-67b5-4953-8959-7ed14e4f2ac0",
+              "name": "Error",
+              "value": "Invalid Phone number",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        656,
+        304
+      ],
+      "id": "d4fc2370-8fbd-438e-9df1-f9512bc617e7",
+      "name": "Edit Fields-Phone Validation"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c18ec2b9-c2be-47c4-8a18-8d97491c2696",
+              "leftValue": "={{ $json.Age }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        912,
+        -96
+      ],
+      "id": "74e41bc6-c368-4a5e-9b37-511feea5d9ab",
+      "name": "If- AGE EMPTY VALIDATION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ddd4f9fc-d519-41e6-800c-ac1ed7ceb78b",
+              "name": "Validation_Status",
+              "value": "Invalid",
+              "type": "string"
+            },
+            {
+              "id": "4a600559-364a-467e-abef-937cc227de20",
+              "name": "Error",
+              "value": "Age is empty",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        256
+      ],
+      "id": "ff39c49f-d14e-451f-8635-77f9febd4f5c",
+      "name": "Edit Fields-AGE EMPTY VALIDATION"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "108475e5-c8c4-47bb-8acf-af837b990934",
+              "leftValue": "={{ $json.Phone }}",
+              "rightValue": "^[0-9]{10}$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        -80
+      ],
+      "id": "7ae23959-be73-4878-b8fd-c5c91b253a5e",
+      "name": "If-PHONE VALIDATION"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6ffc8d47-5d4c-42da-a732-4c355e8c4d7d",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        432,
+        -64
+      ],
+      "id": "49d89aea-486a-4aa5-9310-83d228c6ee87",
+      "name": "If-EMAIL FORMAT VALIDATION"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d48fb526-9076-48cc-9876-bdd9fba8ee93",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        160,
+        -80
+      ],
+      "id": "503ddd1e-4a70-40d0-8532-fab0c7d32b62",
+      "name": "If-EMAIL EMPTY VALIDATION"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "90489e79-4c8a-4120-ba19-4d95008008ca",
+              "leftValue": "={{ $json.Age }}",
+              "rightValue": 18,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "eec99cac-52f5-4f56-8e26-90dc72051498",
+              "leftValue": "={{ $json.Age }}",
+              "rightValue": 100,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1184,
+        -80
+      ],
+      "id": "0d111dcb-b701-45ba-9ea7-66447ef420f7",
+      "name": "If-AGE RANGE VALIDATION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "767c715f-89c1-49d6-b4bd-1a70ab46025d",
+              "name": "Validation_Status",
+              "value": "Invalid",
+              "type": "string"
+            },
+            {
+              "id": "5234264f-386b-4667-82d7-506174f6ab19",
+              "name": "Error",
+              "value": "Age must be between 18 and 100",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1152,
+        256
+      ],
+      "id": "4fe9e30a-e359-4baf-b78f-f4a3c853da01",
+      "name": "Edit Fields-AGE RANGE VALIDATION"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fa512ff0-c902-408e-a458-7c3ea0c835c0",
+              "name": "Validation_Status",
+              "value": "Valid",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1424,
+        -96
+      ],
+      "id": "666b13b4-47bc-4348-ba2c-c9394dbaa707",
+      "name": "Edit Fields-VALIDATION_STATUS UPDATE"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4",
+          "mode": "list",
+          "cachedResultName": "Google Sheet Auto Data Validation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Serial Number": "={{ $json[\"Serial Number\"] }}",
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Phone": "={{ $json.Phone }}",
+            "Age": "={{ $json.Age }}",
+            "City": "={{ $json.City }}",
+            "Validation_Status": "={{ $json.Validation_Status }}",
+            "Error": "={{ $json.Error }}"
+          },
+          "matchingColumns": [
+            "Serial Number"
+          ],
+          "schema": [
+            {
+              "id": "Serial Number",
+              "displayName": "Serial Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Age",
+              "displayName": "Age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Validation_Status",
+              "displayName": "Validation_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Error",
+              "displayName": "Error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1632,
+        -96
+      ],
+      "id": "28e2b6db-3cb3-4e6f-89c7-60c8b649d3a3",
+      "name": "Update row in sheet-VALID DATA",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ioQUTsDHbB7JHzKH",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 6
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1552,
+        528
+      ],
+      "id": "06a9e318-94d1-4c22-bdc8-40d8fb9996e7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4",
+          "mode": "list",
+          "cachedResultName": "Google Sheet Auto Data Validation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QM6b78kCd7maJSZDv990Mcl8uZ3zIJJxo0MG6uXAlo4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Serial Number": "={{ $json[\"Serial Number\"] }}",
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Phone": "={{ $json.Phone }}",
+            "Age": "={{ $json.Age }}",
+            "City": "={{ $json.City }}",
+            "Validation_Status": "={{ $json.Validation_Status }}",
+            "Error": "={{ $json.Error }}"
+          },
+          "matchingColumns": [
+            "Serial Number"
+          ],
+          "schema": [
+            {
+              "id": "Serial Number",
+              "displayName": "Serial Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Age",
+              "displayName": "Age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "City",
+              "displayName": "City",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Validation_Status",
+              "displayName": "Validation_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Error",
+              "displayName": "Error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1760,
+        592
+      ],
+      "id": "a82a6f71-6b1d-4d4a-944f-c495d65c534e",
+      "name": "Update row in sheet-INVALID DATA",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ioQUTsDHbB7JHzKH",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "quicksolveai.mail@gmail.com",
+        "subject": "Google Sheet validation alert",
+        "emailType": "text",
+        "message": "=Invalid data detected in google Sheets\n\nvalidation Status: {{ $json.Validation_Status }}\nError: {{ $json.Error }}\n\nName: {{ $json.Name }}\nEmail: {{ $json.Email }}\nPhone: {{ $json.Phone }}\nCity: {{ $json.City }}\nAge: {{ $json.Age }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1968,
+        592
+      ],
+      "id": "52ab566b-eff6-48e9-88aa-60fd27b3d433",
+      "name": "Send a message-INVALID DATA ALERT",
+      "webhookId": "46b5af9d-b707-45b4-8e66-c5a9943193ba",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tXtm2kkVB9ZUGxG4",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If-NAME VALIDATION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If-NAME VALIDATION": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields-Name validation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If-EMAIL EMPTY VALIDATION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If- AGE EMPTY VALIDATION": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields-AGE EMPTY VALIDATION",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If-AGE RANGE VALIDATION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If-PHONE VALIDATION": {
+      "main": [
+        [
+          {
+            "node": "If- AGE EMPTY VALIDATION",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields-Phone Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If-EMAIL FORMAT VALIDATION": {
+      "main": [
+        [
+          {
+            "node": "If-PHONE VALIDATION",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields-Email Format validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If-EMAIL EMPTY VALIDATION": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields-Email Empty Validation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If-EMAIL FORMAT VALIDATION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If-AGE RANGE VALIDATION": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields-VALIDATION_STATUS UPDATE",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields-AGE RANGE VALIDATION",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields-VALIDATION_STATUS UPDATE": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet-VALID DATA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet-VALID DATA": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields-AGE RANGE VALIDATION": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Edit Fields-Name validation": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields-Email Empty Validation": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields-Email Format validation": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Edit Fields-Phone Validation": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Edit Fields-AGE EMPTY VALIDATION": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet-INVALID DATA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet-INVALID DATA": {
+      "main": [
+        [
+          {
+            "node": "Send a message-INVALID DATA ALERT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f43b1dff-45be-446f-929a-1879dabb7ebf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a2c7e6a66f4620cc79cf138ab9d018dc5aaeb8d0681981c191350f1ab1cf1d37"
+  },
+  "nodeGroups": [],
+  "id": "TiHOnUHBr2065geY",
+  "tags": []
+}
