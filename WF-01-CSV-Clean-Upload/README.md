@@ -1,4 +1,4 @@
-# WF-17: CSV → Clean → Upload to Database
+# WF-01: CSV → Clean → Upload to Database
 
 Automatically upload a CSV file, remove duplicate records, standardize column names, and store clean, structured data in Google Sheets using **n8n**.
 
