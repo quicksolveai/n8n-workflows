@@ -1,0 +1,209 @@
+{
+  "name": "API Data Fetch → Transform → Data Store",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -64
+      ],
+      "id": "71b0489a-8bc2-44a2-90cc-722609528fee",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://jsonplaceholder.typicode.com/users",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -16,
+        -64
+      ],
+      "id": "5c0bdd2d-f215-4e59-964c-0ec7147b5a87",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "409a352c-a1fd-4587-801e-12bd6ad82d79",
+              "name": "user_id",
+              "value": "={{ $json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "3e16d547-a958-4e75-9cf2-f4335aa7ebff",
+              "name": "full_name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "8fabba7d-039a-4321-923b-63f79b20454d",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "bc1de94f-7ac3-4f82-b9da-f4c5c4035906",
+              "name": "city",
+              "value": "={{ $json.address.city }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        -64
+      ],
+      "id": "d398550d-e991-4d1d-88c7-6bf98146effa",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1cjPyI4R5UxPIST5_eDLoV7CTLeHqSNwCPxmjpT9zORw",
+          "mode": "list",
+          "cachedResultName": "API Data Fetch → Transform → Store",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cjPyI4R5UxPIST5_eDLoV7CTLeHqSNwCPxmjpT9zORw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cjPyI4R5UxPIST5_eDLoV7CTLeHqSNwCPxmjpT9zORw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.user_id }}",
+            "full_name": "={{ $json.full_name }}",
+            "email": "={{ $json.email }}",
+            "city": "={{ $json.city }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        -64
+      ],
+      "id": "b8dbbb3a-dca7-4904-b252-fca07cbc45e3",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Yeayis9YetStQrSE",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "720dbeb2-4548-4dcd-8d95-06967f67cc7c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a2c7e6a66f4620cc79cf138ab9d018dc5aaeb8d0681981c191350f1ab1cf1d37"
+  },
+  "nodeGroups": [],
+  "id": "n0UYGDPya5JZT65F",
+  "tags": []
+}
