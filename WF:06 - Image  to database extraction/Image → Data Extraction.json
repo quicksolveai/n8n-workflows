@@ -1,0 +1,176 @@
+{
+  "name": "Image → Data Extraction",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "image_ocr",
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -320,
+        0
+      ],
+      "id": "4de87a2c-9989-40dc-ad62-aefb6de50d09",
+      "name": "Webhook",
+      "webhookId": "05b8b253-6003-486b-8d39-082bf5a31f2b"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "Extract all readable text from this image exactly as it appears. Return only the extracted text. Do not summarize or explain.",
+        "inputType": "base64",
+        "binaryPropertyName": "data0",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "c4616463-b02a-4c12-aabb-f875311ee261",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "26e7ed4d-29e5-4c7d-ba9e-2be74e40816d",
+              "name": "extracted_text",
+              "value": "={{ $json['0'].content[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "9f349bb9-464a-4c37-a023-a78b027b918d",
+              "name": "clean_text",
+              "value": "={{ $json['0'].content[0].text.replace(/```/g, '').replace(/\\n+/g, ' ').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        96,
+        0
+      ],
+      "id": "d379c24e-59fb-4e7a-89bf-6801a46b94a1",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "cKnIgR6rqPXerNzJ",
+          "mode": "list",
+          "cachedResultName": "image_ocr_results",
+          "cachedResultUrl": "/projects/HNFdT5z80amiCeTS/datatables/cKnIgR6rqPXerNzJ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "clean_text": "={{ $json.clean_text }}"
+          },
+          "matchingColumns": [
+            "clean_text"
+          ],
+          "schema": [
+            {
+              "id": "clean_text",
+              "displayName": "clean_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        304,
+        0
+      ],
+      "id": "008695e8-6ec1-41b3-9189-ba0e76286a10",
+      "name": "Insert row"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "3c5a207d-1246-4e9b-9b1b-d99afd910cef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "696d3d8f7d44255f2635ae3997e40022c0b1d042a33abf1ee6ad3b1516907bb4"
+  },
+  "nodeGroups": [],
+  "id": "6ZLaMLr2ppTjGyYw",
+  "tags": []
+}
