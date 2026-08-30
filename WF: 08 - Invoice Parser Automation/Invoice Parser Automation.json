@@ -1,0 +1,274 @@
+{
+  "name": "Invoice Parser Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoice-upload",
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "1a695d7a-b725-487f-acc8-ea2840e0a2cb",
+      "name": "Webhook",
+      "webhookId": "094ad407-205b-4068-b9a1-0e128cdc6bb8"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "data0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "e6a58e9a-0105-4e8a-96e5-c41ebd30c7e0",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "vendor",
+              "description": "vendor"
+            },
+            {
+              "name": "amount",
+              "type": "number",
+              "description": "amount"
+            },
+            {
+              "name": "date",
+              "description": "date"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "d0636158-8fbc-4021-9773-2d962c18bfdf",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        688,
+        176
+      ],
+      "id": "acb21264-c341-4adc-8cb9-8a229adfc9a3",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "qtoLVmXV0LwQwp8T",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "432e5658-3f67-46d5-ad4f-c9990cbc89e2",
+              "name": "vendor",
+              "value": "={{ $json.output.vendor }}",
+              "type": "string"
+            },
+            {
+              "id": "9cc82fd8-e4b9-499b-87b1-fb0688c5246d",
+              "name": "amount",
+              "value": "={{ $json.output.amount }}",
+              "type": "number"
+            },
+            {
+              "id": "3885770e-ddda-4baa-8ad6-912ad9baae25",
+              "name": "date",
+              "value": "={{ $json.output.date }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "4e6ba15f-7414-4f18-9f3c-de7fb07f14f7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1zQ5ElOYQX2KAuDJZHisQvG4QTS6x8FYmRzRP1hlSHfU",
+          "mode": "list",
+          "cachedResultName": "Invoice Database1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zQ5ElOYQX2KAuDJZHisQvG4QTS6x8FYmRzRP1hlSHfU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zQ5ElOYQX2KAuDJZHisQvG4QTS6x8FYmRzRP1hlSHfU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "vendor": "={{ $json.vendor }}",
+            "amount": "={{ $json.amount }}",
+            "date": "={{ $json.date }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "vendor",
+              "displayName": "vendor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1264,
+        0
+      ],
+      "id": "f27e8fd5-4e8a-4f06-bb63-15dcf62833f3",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5VywzyCewzEaPtsR",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f0671293-16b6-47fd-bb0a-81dc5612ea33",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4e017d8e21ddbad6f6ba32ca8d1a700194ea61b7d156222dbfc82d9d41ffeaf6"
+  },
+  "nodeGroups": [],
+  "id": "LaLoS20sgcAPVegF",
+  "tags": []
+}
