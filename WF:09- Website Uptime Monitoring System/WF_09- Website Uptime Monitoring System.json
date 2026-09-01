@@ -1,0 +1,411 @@
+{
+  "name": "WF:09- Website Uptime Monitoring System",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -224,
+        -32
+      ],
+      "id": "f8c67261-123c-40d9-87bb-43695daee476",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.Website }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        496,
+        -16
+      ],
+      "id": "076f2fdd-51aa-4e0d-9c25-872abf1f543c",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bcfedc9a-ff9b-4ad9-a302-11fc39ad3c50",
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        704,
+        -16
+      ],
+      "id": "3fb249d6-5a37-489e-8869-f275ff60b968",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1b7-UeEHlXYU7YG8ePVfvP3WESBbfnU9CEJR5dars3hk",
+          "mode": "list",
+          "cachedResultName": "Website Uptime Monitoring System1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1b7-UeEHlXYU7YG8ePVfvP3WESBbfnU9CEJR5dars3hk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1b7-UeEHlXYU7YG8ePVfvP3WESBbfnU9CEJR5dars3hk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now }}",
+            "Website": "={{ $('Get row(s) in sheet').item.json.Website }}",
+            "Status": "Online"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        960,
+        -288
+      ],
+      "id": "03a77fba-894a-457c-b124-c999f53690c0",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5VywzyCewzEaPtsR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "quicksolveai.mail@gmail.com",
+        "subject": "🚨 Website Down Alert",
+        "emailType": "text",
+        "message": "=🚨 Website Down Alert\n\nThe website {{ $('Get row(s) in sheet').item.json.Website }} is not returning HTTP 200.\n\nPlease check the website.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        64
+      ],
+      "id": "c0235177-ce43-4521-a5c9-3609f213accb",
+      "name": "Send a message",
+      "webhookId": "f8aed277-344b-4bc3-b37d-bbb29327a6d7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZizVtBkJl1wvgf6M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1b7-UeEHlXYU7YG8ePVfvP3WESBbfnU9CEJR5dars3hk",
+          "mode": "list",
+          "cachedResultName": "Website Uptime Monitoring System1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1b7-UeEHlXYU7YG8ePVfvP3WESBbfnU9CEJR5dars3hk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1b7-UeEHlXYU7YG8ePVfvP3WESBbfnU9CEJR5dars3hk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $now }}",
+            "Website": "={{ $('Get row(s) in sheet').item.json.Website }}",
+            "Status": "Down"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "displayName": "Website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1168,
+        64
+      ],
+      "id": "05ba79a0-431b-4f71-8338-e58c61b6975c",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5VywzyCewzEaPtsR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13nOFpkjEHuj87knaTVPVx06lkcnbHzPLpnUFcKMzRCk",
+          "mode": "list",
+          "cachedResultName": "Website Monitor",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13nOFpkjEHuj87knaTVPVx06lkcnbHzPLpnUFcKMzRCk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Website",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13nOFpkjEHuj87knaTVPVx06lkcnbHzPLpnUFcKMzRCk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -16,
+        -32
+      ],
+      "id": "a35f1293-97b3-4a5e-a24e-06a7707444bc",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5VywzyCewzEaPtsR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        224,
+        -32
+      ],
+      "id": "e4d891ab-f583-426d-91b9-ec4aec4988e2",
+      "name": "Loop Over Items"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "80969099-09c3-4c4b-836b-b6134fdc4e52",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4e017d8e21ddbad6f6ba32ca8d1a700194ea61b7d156222dbfc82d9d41ffeaf6"
+  },
+  "nodeGroups": [],
+  "id": "rlj0AATuqowJwNYO",
+  "tags": []
+}
