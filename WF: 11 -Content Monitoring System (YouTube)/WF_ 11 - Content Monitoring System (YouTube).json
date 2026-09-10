@@ -1,0 +1,410 @@
+{
+  "name": "WF: 11 - Content Monitoring System (YouTube)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -352,
+        -16
+      ],
+      "id": "90ee56ac-4047-4a77-a9b9-4083a7d8bfc8",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k",
+          "mode": "list",
+          "cachedResultName": "Content Monitoring System (YouTube)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "content",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -160,
+        -16
+      ],
+      "id": "fd342724-7261-452f-9eaf-a2dd41979e9c",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5VywzyCewzEaPtsR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k",
+          "mode": "list",
+          "cachedResultName": "Content Monitoring System (YouTube)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 433602758,
+          "mode": "list",
+          "cachedResultName": "channels",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k/edit#gid=433602758"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        16,
+        -16
+      ],
+      "id": "9ad2a1ed-bfde-40c4-a43c-85ae8b533c61",
+      "name": "Get row(s) in sheet1",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5VywzyCewzEaPtsR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        192,
+        -16
+      ],
+      "id": "a1e92b4b-536e-4fd7-a452-513817e637ff",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.youtube.com/feeds/videos.xml?channel_id={{ $json[\"Channel ID\"] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "72a68928-8959-4073-83b4-14b13a47ce06",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rssItems = $input.all();\nconst sheetItems = $('Get row(s) in sheet').all();\n\nconst existingIds = new Set(\n  sheetItems\n    .map(item => item.json['Video ID'])\n    .filter(Boolean)\n);\n\nconst newItems = rssItems.filter(item => {\n  const videoId = item.json.id;\n  return !existingIds.has(videoId);\n});\n\nif (newItems.length === 0) {\n  return [\n    {\n      json: {\n        isNew: false\n      }\n    }\n  ];\n}\n\nreturn newItems.map(item => ({\n  json: {\n    ...item.json,\n    isNew: true\n  }\n}));;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ],
+      "id": "60f378ec-ff56-4761-9e08-7a3fdd32cc2d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1ad0bc99-b029-45d1-8adb-3ceb166ef2ea",
+              "leftValue": "={{ $json.isNew }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        832,
+        0
+      ],
+      "id": "ab96c318-468c-474c-b3cc-e732c3bb5cdd",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k",
+          "mode": "list",
+          "cachedResultName": "Content Monitoring System (YouTube)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "content",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-Qr6-5dz8SKgOCWzfjWpHERo_9RtLTUNEeEH1D2Gh3k/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Video ID": "={{ $json.id }}",
+            "Channel Name": "={{ $json.author }}",
+            "Title": "={{ $json.title }}",
+            "Published At": "={{ $json.pubDate }}",
+            "Link": "={{ $json.link }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Video ID",
+              "displayName": "Video ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Channel Name",
+              "displayName": "Channel Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Published At",
+              "displayName": "Published At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Link",
+              "displayName": "Link",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        -16
+      ],
+      "id": "ca491fdb-e822-4060-b120-5d7d6296cf2e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5VywzyCewzEaPtsR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "quicksolveai.mail@gmail.com",
+        "subject": "New Content Detected",
+        "emailType": "text",
+        "message": "=New content detected:\n\nTitle: {{ $json.Title }}\n\nPublished: {{ $json['Published At'] }}\n\nWatch here: {{ $json.Link }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        160
+      ],
+      "id": "334f30d0-b79c-4c9a-a780-e5f66a47fcbd",
+      "name": "Send a message",
+      "webhookId": "597427c8-fdda-4087-9071-796a74b77c91",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZizVtBkJl1wvgf6M",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "35332be9-5d4f-47f2-a328-c169f6697ada",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4e017d8e21ddbad6f6ba32ca8d1a700194ea61b7d156222dbfc82d9d41ffeaf6"
+  },
+  "nodeGroups": [],
+  "id": "7NJrjqq1SyKsJ7Z0",
+  "tags": []
+}
