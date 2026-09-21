@@ -1,0 +1,124 @@
+{
+  "name": "WF:12 - WhatsApp Automation for Any Business",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0a7568a4-50ee-490b-aba4-97be772e9507",
+      "name": "WhatsApp Trigger",
+      "webhookId": "f9238d33-8c13-4ea8-9182-9caccf29619b"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.messages[0].text }}",
+        "options": {
+          "systemMessage": "=Hi, welcome to our Restaurant!\n\n**Restaurant Name:** Urban Tandoor Kitchen\n\n**Location:**\n\n* Address: 45 Lake View Road, Bengaluru\n* Landmark: Opposite Central Mall\n* Google Maps Link: https://maps.google.com/example123\n\n**Timings:**\n\n* Monday to Friday: 11:00 AM – 11:00 PM\n* Saturday & Sunday: 10:00 AM – 11:30 PM\n* Closed on: No weekly holiday\n\n**Menu Categories:**\n\n* Soups\n* Starters\n* Tandoori\n* Main Course\n* Rice & Biryani\n* Desserts\n* Beverages\n\n**Popular Items:**\n\n* Chicken Tikka – ₹260\n* Butter Chicken – ₹290\n* Veg Tandoori Platter – ₹240\n* Chicken Dum Biryani – ₹280\n* Garlic Naan – ₹70\n* Chocolate Brownie – ₹120\n\n**Price Range:**\n\n* ₹70 – ₹450\n\n**Delivery:**\n\n* Delivery Time: 35–50 minutes\n* Delivery Charges: ₹40 within 5km\n* Free Delivery Above: ₹699\n* Delivery Area: Within 10km radius\n\n**Pickup:**\n\n* Available\n* Pickup waiting time: 10–15 minutes\n\n**Payment Methods:**\n\n* Cash on Delivery\n* UPI\n* Credit/Debit Card\n* PhonePe\n* Google Pay\n* Paytm\n\n**Offers:**\n\n* 15% off on orders above ₹1,199\n* Free Garlic Naan on orders above ₹799\n* Weekend combo available for ₹599\n\n**Cancellation Policy:**\n\n* Order can be cancelled within 3 minutes of placing\n* No cancellation after food preparation begins\n* Refunds for cancelled eligible orders are processed within 3–5 business days\n\n**Special Notes:**\n\n* Vegetarian and non-vegetarian options available\n* Less-spicy dishes available on request\n* Vegan options available\n* Please inform us about any food allergies before ordering\n\nThank you for your order!\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5e8a8cfb-a89f-4191-a79f-2370dbf540dc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        64,
+        208
+      ],
+      "id": "5333d9d1-f5cc-4198-ae99-37405da13530",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "1357554170765433",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        0
+      ],
+      "id": "c77b9f08-c534-4e7c-a161-1ce2f3995f9e",
+      "name": "Send message",
+      "webhookId": "9c632a5d-d63e-47ba-b4f9-9ce1eaee69ce"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b5f24de5-b1fa-434e-a1bc-33007da6efa5",
+  "meta": {
+    "instanceId": "79ecdd06a21a71b8b539d8d3fdd1bb5affee044e45b49dc90ed99a32fc6f7feb"
+  },
+  "nodeGroups": [],
+  "id": "AYDVk4aHUVrFei1E",
+  "tags": []
+}
