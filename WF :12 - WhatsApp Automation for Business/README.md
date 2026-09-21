@@ -1,5 +1,5 @@
 
-# WhatsApp AI Automation for Business
+# WhatsApp AI Automation for Any Business
 
 An n8n workflow that receives WhatsApp messages, processes them through an AI Agent powered by Google Gemini, and automatically sends the generated response back through WhatsApp.
 
