@@ -1,0 +1,165 @@
+{
+  "name": "WF: 13- Telegram Automation for Any Business",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -848,
+        -144
+      ],
+      "id": "31b611d4-d942-4c53-a51d-dbee16b156a4",
+      "name": "Telegram Trigger",
+      "webhookId": "4cd29f1f-a724-4263-8f28-4d21ccbd285f",
+      "credentials": {
+        "telegramApi": {
+          "id": "TUgAxRcx94wl2T58",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Hi, welcome to our Restaurant!\n\n**Restaurant Name:** Urban Tandoor Kitchen\n\n**Location:**\n\n* Address: 45 Lake View Road, Bengaluru\n* Landmark: Opposite Central Mall\n* Google Maps Link: https://maps.google.com/example123\n\n**Timings:**\n\n* Monday to Friday: 11:00 AM – 11:00 PM\n* Saturday & Sunday: 10:00 AM – 11:30 PM\n* Closed on: No weekly holiday\n\n**Menu Categories:**\n\n* Soups\n* Starters\n* Tandoori\n* Main Course\n* Rice & Biryani\n* Desserts\n* Beverages\n\n**Popular Items:**\n\n* Chicken Tikka – ₹260\n* Butter Chicken – ₹290\n* Veg Tandoori Platter – ₹240\n* Chicken Dum Biryani – ₹280\n* Garlic Naan – ₹70\n* Chocolate Brownie – ₹120\n\n**Price Range:**\n\n* ₹70 – ₹450\n\n**Delivery:**\n\n* Delivery Time: 35–50 minutes\n* Delivery Charges: ₹40 within 5km\n* Free Delivery Above: ₹699\n* Delivery Area: Within 10km radius\n\n**Pickup:**\n\n* Available\n* Pickup waiting time: 10–15 minutes\n\n**Payment Methods:**\n\n* Cash on Delivery\n* UPI\n* Credit/Debit Card\n* PhonePe\n* Google Pay\n* Paytm\n\n**Offers:**\n\n* 15% off on orders above ₹1,199\n* Free Garlic Naan on orders above ₹799\n* Weekend combo available for ₹599\n\n**Cancellation Policy:**\n\n* Order can be cancelled within 3 minutes of placing\n* No cancellation after food preparation begins\n* Refunds for cancelled eligible orders are processed within 3–5 business days\n\n**Special Notes:**\n\n* Vegetarian and non-vegetarian options available\n* Less-spicy dishes available on request\n* Vegan options available\n* Please inform us about any food allergies before ordering\n\nThank you for your order!\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -560,
+        -144
+      ],
+      "id": "45b5db96-a13d-409b-ad4e-24290cd5ebe1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -704,
+        128
+      ],
+      "id": "cc773e01-8c69-4d55-add3-1332453d0058",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.text }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -512,
+        144
+      ],
+      "id": "c1cdc19d-1213-4693-b576-8cafad135aba",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        -144
+      ],
+      "id": "f7b759a5-b223-4b92-b5b9-3574a852faef",
+      "name": "Send a text message",
+      "webhookId": "c4489e0c-25f2-4197-9379-4ab170910e7e",
+      "credentials": {
+        "telegramApi": {
+          "id": "TUgAxRcx94wl2T58",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5bdec721-398d-4507-8c0c-e082c05deeb2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79ecdd06a21a71b8b539d8d3fdd1bb5affee044e45b49dc90ed99a32fc6f7feb"
+  },
+  "nodeGroups": [],
+  "id": "MXW8FwQ49967gdMZ",
+  "tags": []
+}
