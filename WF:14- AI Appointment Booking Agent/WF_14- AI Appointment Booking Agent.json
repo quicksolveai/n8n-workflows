@@ -1,0 +1,293 @@
+{
+  "name": "WF:14- AI Appointment Booking Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "APPOINTMENT BOOKING FORM",
+        "formDescription": "FILL THE BELOW DETAILS ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "FULL NAME"
+            },
+            {
+              "fieldLabel": "MOBILE NUMBER",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "EMAIL ID",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "TYPE OF SERVICE",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "GENERAL"
+                  },
+                  {
+                    "option": "DENTAL"
+                  },
+                  {
+                    "option": "ORTHO"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5b8af695-2815-40bb-a39e-0aa8d2fb1477",
+      "name": "APPOINTMENT FORM",
+      "webhookId": "5b17fb75-310d-4c77-847e-f3179262c6dd"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json['EMAIL ID'] }}",
+        "options": {
+          "systemMessage": "=you are an AI appointment booking agent for hospital. your responsibilities are: automatically assign the appointment date of exactly 2 days after the form submission date. the mail must be professional, polite and suitable for a hospital"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "6fd742ee-9f66-4a4a-829b-9033d6bb601a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1pQR9QPU1ezctk45VbK2gksIT9b6cFsNfP0_oniATPLo",
+          "mode": "list",
+          "cachedResultName": "Appointment Booking Agent1 ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pQR9QPU1ezctk45VbK2gksIT9b6cFsNfP0_oniATPLo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pQR9QPU1ezctk45VbK2gksIT9b6cFsNfP0_oniATPLo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('APPOINTMENT FORM').item.json['FULL NAME'] }}",
+            "Mobile Number": "={{ $('APPOINTMENT FORM').item.json['MOBILE NUMBER'] }}",
+            "Email ID": "={{ $('APPOINTMENT FORM').item.json['EMAIL ID'] }}",
+            "Service": "={{ $('APPOINTMENT FORM').item.json['TYPE OF SERVICE'] }}",
+            "Submission Date": "={{ $('APPOINTMENT FORM').item.json.submittedAt }}",
+            "Appointment Date": "={{ $now.plus({days:2}).format('yyyy-MM-dd')}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Mobile Number",
+              "displayName": "Mobile Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email ID",
+              "displayName": "Email ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Appointment Date",
+              "displayName": "Appointment Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submission Date",
+              "displayName": "Submission Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        560,
+        0
+      ],
+      "id": "c2597ce8-6b47-4938-a383-fcfae6cc26c6",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "73nsKMQtnHBh5th2",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email ID'] }}",
+        "subject": "=APPOINTMENT DETAILS FOR {{ $json.Name }}",
+        "emailType": "text",
+        "message": "=Dear {{ $json.Name }}\n\nThank you for submitting your appointment request. We are pleased to confirm your appointment has been scheduled.\n\nAppointment Date: {{ $json['Appointment Date'] }}\nSubmission Date: {{ $json['Submission Date'] }}\nType of Service: {{ $json.Service }}\n\nKindly arrive at least 10–15 minutes early and carry any relevant medical records.\n\nIf you have any questions or need to reschedule, please contact us.\n\nWishing you good health.\n\nSincerely,\nTeam",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "151df716-4abd-42d1-9f93-a58b13ceebf7",
+      "name": "Send a message",
+      "webhookId": "5ad904b6-bcea-4803-85a2-687ca86bfb76",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BFAUM8Jtmdjo7qn6",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        256
+      ],
+      "id": "d8adbea1-0527-45f0-9f9a-a4fa9c835e8e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "APPOINTMENT FORM": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "42115bc7-58e3-4088-9fc8-ca18c75f6d77",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79ecdd06a21a71b8b539d8d3fdd1bb5affee044e45b49dc90ed99a32fc6f7feb"
+  },
+  "nodeGroups": [],
+  "id": "nSpZ3rlYlXKGIw2Y",
+  "tags": []
+}
