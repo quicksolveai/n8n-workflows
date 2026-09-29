@@ -1,0 +1,651 @@
+{
+  "name": "WF: 15- CUSTOMER FEEDBACK AUTOMATION",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "CUSTOMER FEEDBACK FORM",
+        "formDescription": "PROVIDE YOUR VALUBLE FEEDBACK",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "NAME",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "CONTACT NUMBER",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "EMAIL ID",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "FEEDBACK",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -1200,
+        144
+      ],
+      "id": "cdb2a054-8e99-4cf9-98b5-7e8cbc3453a2",
+      "name": "CUSTOMER FEEDBACK FORM",
+      "webhookId": "e57147aa-8101-4a12-b38b-4c80731ebd0a"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.FEEDBACK }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a feedback classification system.\n\nYour task is to analyze the given user feedback and classify it into one of the following categories:\n\nCategories:\n1. Complaint:\n   - Negative feedback expressing dissatisfaction, issues, or problems\n   - Includes frustration, criticism, or unmet expectations\n\n2. Compliment:\n   - Positive feedback expressing satisfaction, appreciation, or praise\n\n3. Future Addition Request:\n   - Suggestions, feature requests, or improvements the user wants in the future\n   - May include phrases like \"it would be better if\", \"please add\", \"I wish\"\n\nInstructions:\n- Carefully analyze the intent of the feedback, not just keywords\n- If feedback contains multiple sentiments, choose the dominant intent\n- Do not overthink or create new categories\n\nOutput Format:\nCategory: <Complaint / Compliment / Future Addition Request>\n\nConstraints:\n- Output only the category\n- Do not provide explanation\n- Do not include extra text"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -976,
+        144
+      ],
+      "id": "13e8ba07-6f33-4e2d-a6af-661653700140",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{ \n  \"category\":\"complaint\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -840,
+        376
+      ],
+      "id": "9b23efbc-b45f-4fa1-a1ae-bc11a6758916",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -968,
+        376
+      ],
+      "id": "5e50a39a-7571-4712-b08c-537de7d34346",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "Compliment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "41cea210-2e7a-47a4-80cb-60cffe4f2371"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b1c7c470-626a-4c54-88df-cf8df9a1b383",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "Complaint",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0a1f4220-8cb0-424c-8508-51f50e5878b4",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "Future Addition Request",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -624,
+        128
+      ],
+      "id": "3c9a42be-47cf-4804-90d4-10e48ea7959b",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU",
+          "mode": "list",
+          "cachedResultName": "CUST FEEDBACK CATEGORY",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 234458046,
+          "mode": "list",
+          "cachedResultName": "Future addition request",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU/edit#gid=234458046"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $('CUSTOMER FEEDBACK FORM').item.json.NAME }}",
+            "CONTACT NUMBER": "={{ $('CUSTOMER FEEDBACK FORM').item.json['CONTACT NUMBER'] }}",
+            "EMAIL ID": "={{ $('CUSTOMER FEEDBACK FORM').item.json['EMAIL ID'] }}",
+            "FEEDBACK": "={{ $('CUSTOMER FEEDBACK FORM').item.json.FEEDBACK }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CONTACT NUMBER",
+              "displayName": "CONTACT NUMBER",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "EMAIL ID",
+              "displayName": "EMAIL ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FEEDBACK",
+              "displayName": "FEEDBACK",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -400,
+        336
+      ],
+      "id": "f8938410-a3ec-402f-9df8-45bdf2caf59c",
+      "name": "FUTURE ADDITIOIN REQUEST",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TpsZKtMWy6VOE5QY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU",
+          "mode": "list",
+          "cachedResultName": "CUST FEEDBACK CATEGORY",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 944827722,
+          "mode": "list",
+          "cachedResultName": "complaint",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU/edit#gid=944827722"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $('CUSTOMER FEEDBACK FORM').item.json.NAME }}",
+            "CONTACT NUMBER": "={{ $('CUSTOMER FEEDBACK FORM').item.json['CONTACT NUMBER'] }}",
+            "EMAIL ID": "={{ $('CUSTOMER FEEDBACK FORM').item.json['EMAIL ID'] }}",
+            "FEEDBACK": "={{ $('CUSTOMER FEEDBACK FORM').item.json.FEEDBACK }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CONTACT NUMBER",
+              "displayName": "CONTACT NUMBER",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "EMAIL ID",
+              "displayName": "EMAIL ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FEEDBACK",
+              "displayName": "FEEDBACK",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -400,
+        144
+      ],
+      "id": "aa348907-8273-4bab-9567-373c24920ab8",
+      "name": "COMPLAINT",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TpsZKtMWy6VOE5QY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU",
+          "mode": "list",
+          "cachedResultName": "CUST FEEDBACK CATEGORY",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "compliment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1abL4fHsOsx9c82LhHHl_G7YV1Raf17RfCLSF5ZCqqGU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NAME": "={{ $('CUSTOMER FEEDBACK FORM').item.json.NAME }}",
+            "CONTACT NUMBER": "={{ $('CUSTOMER FEEDBACK FORM').item.json['CONTACT NUMBER'] }}",
+            "EMAIL ID": "={{ $('CUSTOMER FEEDBACK FORM').item.json['EMAIL ID'] }}",
+            "FEEDBACK": "={{ $('CUSTOMER FEEDBACK FORM').item.json.FEEDBACK }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "NAME",
+              "displayName": "NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CONTACT NUMBER",
+              "displayName": "CONTACT NUMBER",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "EMAIL ID",
+              "displayName": "EMAIL ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FEEDBACK",
+              "displayName": "FEEDBACK",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -400,
+        -48
+      ],
+      "id": "2862f6d9-3a87-4f98-9fe0-d77972affae8",
+      "name": "COMPLIMENT",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "TpsZKtMWy6VOE5QY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0AQGHY48CA",
+          "mode": "list",
+          "cachedResultName": "complaint"
+        },
+        "text": "={{ $('CUSTOMER FEEDBACK FORM').item.json.FEEDBACK }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -176,
+        144
+      ],
+      "id": "cdf52607-9644-4934-be7c-6869e0b41535",
+      "name": "COMPLAINT1",
+      "webhookId": "cea31af2-8e21-4649-83a2-2f625c75593b",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "IbLBQRv1fuYrdP5t",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0AQA6Q2SH1",
+          "mode": "list",
+          "cachedResultName": "futire-addition-request"
+        },
+        "text": "={{ $('CUSTOMER FEEDBACK FORM').item.json.FEEDBACK }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -176,
+        336
+      ],
+      "id": "e55499db-e080-417a-b110-de6583f91df3",
+      "name": "FUTURE ADDITION REQUEST",
+      "webhookId": "cea31af2-8e21-4649-83a2-2f625c75593b",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "IbLBQRv1fuYrdP5t",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0C4B193ZAB",
+          "mode": "list",
+          "cachedResultName": "compliment"
+        },
+        "text": "={{ $('CUSTOMER FEEDBACK FORM').item.json.FEEDBACK }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -176,
+        -48
+      ],
+      "id": "a9a58815-17bc-4dcf-9d07-77036482c9ef",
+      "name": "COMPLIMENT1",
+      "webhookId": "cea31af2-8e21-4649-83a2-2f625c75593b",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "IbLBQRv1fuYrdP5t",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "CUSTOMER FEEDBACK FORM": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "COMPLIMENT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "COMPLAINT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "FUTURE ADDITIOIN REQUEST",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "COMPLAINT": {
+      "main": [
+        [
+          {
+            "node": "COMPLAINT1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "COMPLIMENT": {
+      "main": [
+        [
+          {
+            "node": "COMPLIMENT1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FUTURE ADDITIOIN REQUEST": {
+      "main": [
+        [
+          {
+            "node": "FUTURE ADDITION REQUEST",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a3d2e381-83a6-4da0-9ff9-51aad56806cb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79ecdd06a21a71b8b539d8d3fdd1bb5affee044e45b49dc90ed99a32fc6f7feb"
+  },
+  "nodeGroups": [],
+  "id": "38IU2ZfREmofnQVI",
+  "tags": []
+}
