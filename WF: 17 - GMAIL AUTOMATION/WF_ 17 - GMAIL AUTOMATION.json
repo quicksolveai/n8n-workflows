@@ -1,0 +1,157 @@
+{
+  "name": "WF: 17 - GMAIL AUTOMATION",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "fb11e7af-a82e-4451-b9c5-059759d4c1aa",
+      "name": "When chat message received",
+      "webhookId": "b5b1265d-08c8-42cf-a6b9-bc02fbdcca71"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Write a professional email in a moderate tone (not too simple, not overly complex).\n\nContext:\nThe email is about an AI agent solution. The purpose is to explain the concept clearly in a structured, business-friendly way without going too deep technically.\n\nInstructions:\n- Keep the tone professional, clear, and confident\n- Avoid overly technical jargon\n- Keep explanations concise but meaningful\n- Use proper email structure\n\nEmail Structure:\n1. Subject line (clear and relevant)\n2. Greeting (formal but natural)\n3. Introduction (brief purpose of the email)\n4. Main Content:\n   - Explain what the AI agent is\n   - Describe what problem it solves\n   - Explain how it works at a high level\n   - Mention key benefits (efficiency, automation, accuracy, etc.)\n5. Closing:\n   - Invite response or discussion\n   - Keep it polite and professional\n6. Signature (simple)\n\nConstraints:\n- Do not make it too long\n- Do not make it too basic\n- Keep balance between clarity and professionalism\n\nOutput only the email."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "90a7ba2a-33b4-4ca9-a33e-48d15c38fe43",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        224
+      ],
+      "id": "78d303eb-2261-440c-9418-4460d3a3cfd8",
+      "name": "Send a message in Gmail",
+      "webhookId": "8d1c3459-bc20-4d43-a1f4-4dd2a37d95a5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k7Jjf8vWlhtLHRT7",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        240
+      ],
+      "id": "44fd5ab9-1c1a-41fb-86e4-6118fc5355ee",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        240
+      ],
+      "id": "af696768-06bb-48fe-90ee-d26bf03eed1f",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6ef9b54c-776e-4452-834d-a9dbb753099f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5208c62156d8ad3baed28efbd88a125786bac94494fdded160fc23cc23066347"
+  },
+  "nodeGroups": [],
+  "id": "xLBhhptQ3FYsKkol",
+  "tags": []
+}
